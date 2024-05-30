@@ -1,0 +1,7 @@
+
+hwy: # 华为云OBS配置信息
+  obs:
+    endpoint: obs.ap-southeast-1.myhuaweicloud.com
+    bucket: flea-market-obs
+    access-key: jLe94pgmng3uynEJeZlnCseQBdkJEe4outCUme0J
+    access-id: PKVSY6FN8DCQZQQMNSNT
