@@ -58,6 +58,11 @@
             <artifactId>esdk-obs-java</artifactId>
             <version>3.20.6.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
