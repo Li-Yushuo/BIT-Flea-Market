@@ -27,4 +27,5 @@ public interface ProductImageMapper {
     // 查询所有产品图片
     @Select("SELECT * FROM product_image")
     List<ProductImage> findAll();
+
 }

@@ -10,6 +10,7 @@ public class AdminController {
     //冻结用户
     @PutMapping("/users/{user_id}/freeze")
     public String freezeUser() {
+
         return "freeze";
     }
 
