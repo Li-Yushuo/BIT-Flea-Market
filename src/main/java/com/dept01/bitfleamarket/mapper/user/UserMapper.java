@@ -10,15 +10,15 @@ public interface UserMapper {
 
     // 查找所有User
     @Select("SELECT * FROM user")
-    List<User> findAll();
+    List<User> selectAll();
 
     // 根据userId查找User
     @Select("SELECT * FROM user WHERE user_id = #{userId}")
-    User findById(@Param("userId") int userId);
+    User selectById(@Param("userId") int userId);
 
     // 根据bitId查找User
     @Select("SELECT * FROM user WHERE bit_id = #{bitId}")
-    User findByBitId(@Param("bitId") String bitId);
+    User selectByBitId(@Param("bitId") String bitId);
 
     // 新建User
     @Options(useGeneratedKeys = true, keyProperty = "userId")

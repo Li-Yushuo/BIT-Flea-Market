@@ -1,13 +1,15 @@
 package com.dept01.bitfleamarket.controller;
 
-import com.dept01.bitfleamarket.Service.ProductService;
-import com.dept01.bitfleamarket.json.GetProductsReturn;
+import com.dept01.bitfleamarket.json.*;
+import com.dept01.bitfleamarket.service.ProductService;
 import com.dept01.bitfleamarket.pojo.product.Product;
+import com.dept01.bitfleamarket.service.ProductService;
 import com.dept01.bitfleamarket.utils.Result;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,31 +32,92 @@ public class ProductController {
 
     //获取商品详情
     @GetMapping("/products/{product_id}")
-    public String getProductDetail() {
-        return "product";
+    public Result getProductDetail(@PathVariable String product_id) {
+        GetProductByIdReturn product = productService.getProductById(product_id);
+        if (product == null)
+            return Result.error("该商品不存在");
+        else
+            return Result.success(product);
     }
 
-    //发布商品
     @PostMapping("/products")
-    public String publishProduct() {
-        return "publish";
+    public Result createProduct(@RequestBody CreateProductRequest request, HttpServletRequest httpRequest) {
+        // 获取用户 ID（假设用户 ID 存储在请求头中）
+        String userIdStr = httpRequest.getHeader("userId");
+        if (userIdStr == null || userIdStr.isEmpty()) {
+            return Result.error((short) 6, "Unauthorized", null);
+        }
+
+        int userId;
+        try {
+            userId = Integer.parseInt(userIdStr);
+        } catch (NumberFormatException e) {
+            return Result.error((short) 1, "Invalid user ID", null);
+        }
+
+        return productService.createProduct(request, userId);
     }
 
-    //修改商品描述
-    @PostMapping("/products/{product_id}")
-    public String modifyProduct() {
-        return "modify";
+    @PostMapping("/product/{product_id}/uploadPic")
+    public Result uploadProductImage(@PathVariable("product_id") int productId,
+                                     @RequestParam("img") MultipartFile img) {
+        return productService.uploadProductImage(productId, img);
     }
 
-    //修改商品状态
-    @PostMapping("/products/{product_id}/status")
-    public String modifyProductStatus() {
-        return "modify_status";
+//    //发布商品
+//    @PostMapping("/products")
+//    public String publishProduct() {
+//        return "publish";
+//    }
+    @PutMapping("/product/{product_id}")
+    public Result updateProduct(@PathVariable("product_id") int productId,
+                                @RequestBody UpdateProductRequest request,
+                                HttpServletRequest httpRequest) {
+        // 检查请求头中的 Authorization
+        String userIdStr = httpRequest.getHeader("user_id");
+        if (userIdStr == null || userIdStr.isEmpty()) {
+            return Result.error((short) 6, "Unauthorized", null);
+        }
+
+        int userId;
+        try {
+            userId = Integer.parseInt(userIdStr);
+        } catch (NumberFormatException e) {
+            return Result.error((short) 131, "用户认证失败", null);
+        }
+
+        return productService.updateProduct(productId, request, userId);
+    }
+    @PutMapping("/product/{product_id}/status")
+    public Result updateProductStatus(@PathVariable("product_id") int productId,
+                                      @RequestBody String status,
+                                      HttpServletRequest httpRequest) {
+        // 检查请求头中的 Authorization
+        String userIdStr = httpRequest.getHeader("Authorization");
+        if (userIdStr == null || userIdStr.isEmpty()) {
+            return Result.error((short) 6, "Unauthorized", null);
+        }
+
+        int userId;
+        try {
+            userId = Integer.parseInt(userIdStr);
+        } catch (NumberFormatException e) {
+            return Result.error((short) 1, "Invalid user ID", null);
+        }
+
+        return productService.updateProductStatus(productId, status, userId);
     }
 
-    //查看发布商品记录
-    @GetMapping("/products/publish")
-    public String getPublishRecord() {
-        return "publish_record";
+    @GetMapping("/product/{user_id}")
+    public Result getUserProducts(@PathVariable("user_id") int userId,
+                                  @RequestBody UserProductsRequest request,
+                                  HttpServletRequest httpRequest) {
+        // 检查请求头中的 Authorization
+        String authorization = httpRequest.getHeader("Authorization");
+        if (authorization == null || authorization.isEmpty()) {
+            return Result.error((short) 6, "Unauthorized", null);
+        }
+
+        return productService.getUserProducts(userId, request.getLastProductId(), request.getNum());
     }
 }

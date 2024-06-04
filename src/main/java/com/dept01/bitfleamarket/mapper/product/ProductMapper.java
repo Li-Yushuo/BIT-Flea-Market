@@ -26,5 +26,11 @@ public interface ProductMapper {
 
     // 查询所有产品
     @Select("SELECT * FROM product")
-    List<Product> findAll();
+    List<Product> SelectAll();
+
+    @Select("SELECT * FROM product WHERE publisher_id = #{userId} AND product_id > #{lastProductId} LIMIT #{num}")
+    List<Product> findUserProducts(@Param("userId") int userId, @Param("lastProductId") int lastProductId, @Param("num") int num);
+
+    @Select("SELECT COUNT(*) FROM product WHERE publisher_id = #{userId}")
+    int countUserProducts(@Param("userId") int userId);
 }

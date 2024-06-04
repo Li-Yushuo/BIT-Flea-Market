@@ -26,6 +26,9 @@ public interface ProductImageMapper {
 
     // 查询所有产品图片
     @Select("SELECT * FROM product_image")
-    List<ProductImage> findAll();
+    List<ProductImage> SelectAll();
+    // 根据商品Id查询图片
+    @Select("SELECT * FROM product_image WHERE product_id = #{productId}")
+    List<ProductImage> getProductImagesByProductId(int productId);
 
 }

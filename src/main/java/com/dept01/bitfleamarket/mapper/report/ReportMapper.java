@@ -26,5 +26,5 @@ public interface ReportMapper {
 
     // 查询所有举报
     @Select("SELECT * FROM report")
-    List<Report> findAll();
+    List<Report> SelectAll();
 }

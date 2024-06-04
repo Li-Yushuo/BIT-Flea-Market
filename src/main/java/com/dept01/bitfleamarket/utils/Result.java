@@ -32,6 +32,9 @@ public class Result {
     public static Result error(String msg) {
         return new Result((short) 1, msg, null);
     }
+    public static Result error(Short code, String msg) {return new Result(code, msg, null);}
+
+    public static Result error(Short code, String msg, Object data) {return new Result(code, msg, data);}
 
     @Override
     public String toString() {

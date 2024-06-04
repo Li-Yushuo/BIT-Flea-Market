@@ -10,7 +10,7 @@ import java.util.List;
 public interface AdminMapper {
     // 查找所有Admin
     @Select("SELECT * FROM admin")
-    List<Admin> findAll();
+    List<Admin> SelectAll();
 
     // 根据adminId查找Admin
     @Select("SELECT * FROM admin WHERE admin_id = #{adminId}")

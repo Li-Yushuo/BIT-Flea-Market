@@ -26,5 +26,5 @@ public interface CommentMapper {
 
     // 查询所有评论
     @Select("SELECT * FROM comment")
-    List<Comment> findAll();
+    List<Comment> SelectAll();
 }
