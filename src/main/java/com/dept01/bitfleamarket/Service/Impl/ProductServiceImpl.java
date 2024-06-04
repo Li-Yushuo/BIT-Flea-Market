@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public GetProductsReturn getProducts(int offset, int num, String search_input, String product_categroy, int price_choice) {
-        List<Product> allProducts = productMapper.SelectAll();
+        List<Product> allProducts = productMapper.selectAll();
         // 异常情况
         if (allProducts == null || allProducts.isEmpty() || offset < 0 || offset >= allProducts.size() || num <= 0) {
             List<Product> tmp = new ArrayList<>();
@@ -51,12 +51,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public GetProductByIdReturn getProductById(String id){
-        Product product = productMapper.getProductById(Integer.parseInt(id));
+        Product product = productMapper.selectByProductId(Integer.parseInt(id));
         // 找不到就直接返回null
         if (product == null)
             return null;
         int publisherId = product.getPublisherId();
-        User user = userMapper.selectById(publisherId);
+        User user = userMapper.selectByUserId(publisherId);
         List<ProductImage> productImageList = productImageMapper.getProductImagesByProductId(product.getProductId());
         return GetProductByIdReturn.from(product, user, productImageList);
     }
@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus("ACTIVE"); // 假设新创建的产品状态为 ACTIVE
         product.setInventory(request.getInventory());
         product.setDescription(request.getDescription());
-        product.setAnonymous(request.isAnonymous());
+        product.setAnonymous(request.getIsAnonymous());
         product.setCreateTime(now);
         product.setUpdateTime(now);
 
@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Result updateProduct(int productId, UpdateProductRequest request, int userId) {
         // 检查产品是否存在
-        Product existingProduct = productMapper.getProductById(productId);
+        Product existingProduct = productMapper.selectByProductId(productId);
         if (existingProduct == null) {
             return Result.error("Product not found");
         }
@@ -170,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
 
         existingProduct.setUpdateTime(LocalDateTime.now());
 
-        int rows = productMapper.updateProduct(existingProduct);
+        int rows = productMapper.update(existingProduct);
         if (rows <= 0) {
             return Result.error("Failed to update product");
         }
@@ -181,7 +181,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Result updateProductStatus(int productId, String status, int userId) {
         // 检查产品是否存在
-        Product existingProduct = productMapper.getProductById(productId);
+        Product existingProduct = productMapper.selectByProductId(productId);
         if (existingProduct == null) {
             return Result.error("Product not found");
         }
@@ -200,7 +200,7 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setStatus(status);
         existingProduct.setUpdateTime(LocalDateTime.now());
 
-        int rows = productMapper.updateProduct(existingProduct);
+        int rows = productMapper.update(existingProduct);
         if (rows <= 0) {
             return Result.error((short) 201, "输入信息格式不对");
         }
@@ -210,8 +210,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Result getUserProducts(int userId, int lastProductId, int num) {
-        List<Product> products = productMapper.findUserProducts(userId, lastProductId, num);
-        int totalNum = productMapper.countUserProducts(userId);
+        List<Product> products = productMapper.ShowProductsByNum(userId, lastProductId, num);
+        int totalNum = productMapper.countByPublisherId(userId);
 
         return Result.success(new UserProductsResponse(products.size(), totalNum, products));
     }

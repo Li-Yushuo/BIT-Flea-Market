@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MsgListReturn {
-    private int num;
+    private Integer num;
     private List<Message> messages;
 }

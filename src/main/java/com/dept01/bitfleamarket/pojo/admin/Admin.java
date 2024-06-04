@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin {
-    private int adminId;
+    private Integer adminId;
     private String password;
     private String name;
     private LocalDateTime createTime;

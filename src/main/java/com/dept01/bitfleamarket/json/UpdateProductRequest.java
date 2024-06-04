@@ -18,7 +18,7 @@ public class UpdateProductRequest {
     private String productCategory;
     private Integer inventory;
     private String description;
-    private Boolean isAnonymous;
+    private Integer isAnonymous;
     private List<ImageRequest> images;
 
     @Data

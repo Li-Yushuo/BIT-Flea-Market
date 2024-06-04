@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private int userId;
+    private Integer userId;
     private String bitId;
     private String name;
     private String gender; // 在数据库中为enum类型

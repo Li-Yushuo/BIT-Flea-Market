@@ -15,9 +15,9 @@ public class CreateProductRequest {
     private BigDecimal price;
     private String purchaseMethod;
     private String productCategory;
-    private int inventory;
+    private Integer inventory;
     private String description;
-    private boolean isAnonymous;
+    private Integer isAnonymous;
     private List<ImageRequest> images;
 
     @Data

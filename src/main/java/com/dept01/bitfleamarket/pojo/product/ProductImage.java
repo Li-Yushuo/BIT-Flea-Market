@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductImage {
-    private int imageId;
-    private int productId;
+    private Integer imageId;
+    private Integer productId;
     private String imageUrl;
     private LocalDateTime createTime;
 }

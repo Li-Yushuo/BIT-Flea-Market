@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthInfoReturn {
-    private int user_id;
+    private Integer user_id;
     private String name;
     private String avatar_url;
     private String token;

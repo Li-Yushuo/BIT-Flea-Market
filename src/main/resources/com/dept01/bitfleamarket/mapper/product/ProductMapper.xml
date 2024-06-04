@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dept01.bitfleamarket.mapper.product.ProductMapper">
+    <select id="selectByCondition" resultType="com.dept01.bitfleamarket.pojo.product.Product">
+        SELECT * FROM product
+        <where>
+            <if test="productId != null">
+                AND product_id = #{productId}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="price != null">
+                AND price = #{price}
+            </if>
+            <if test="purchaseMethod != null">
+                AND purchase_method = #{purchaseMethod}
+            </if>
+            <if test="productCategory != null">
+                AND product_category = #{productCategory}
+            </if>
+            <if test="publisherId != null">
+                AND publisher_id = #{publisherId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="inventory != null">
+                AND inventory = #{inventory}
+            </if>
+            <if test="description != null">
+                AND description = #{description}
+            </if>
+            <if test="isAnonymous != null">
+                AND is_anonymous = #{isAnonymous}
+            </if>
+            <if test="beginCreateTime != null and endCreateTime != null">
+                AND create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+            </if>
+            <if test="beginUpdateTime != null and endUpdateTime != null">
+                AND update_time BETWEEN #{beginUpdateTime} AND #{endUpdateTime}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+    <update id="update" parameterType="com.dept01.bitfleamarket.pojo.product.Product">
+        UPDATE product
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="purchaseMethod != null">
+                purchase_method = #{purchaseMethod},
+            </if>
+            <if test="productCategory != null">
+                product_category = #{productCategory},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="inventory != null">
+                inventory = #{inventory},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="isAnonymous != null">
+                is_anonymous = #{isAnonymous},
+            </if>
+        </set>
+        WHERE product_id = #{productId}
+    </update>
+
+</mapper>

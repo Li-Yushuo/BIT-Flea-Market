@@ -10,10 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-    private int commentId;
-    private int userId;
-    private int productId;
-    private boolean isAnonymous;
+    private Integer commentId;
+    private Integer userId;
+    private Integer productId;
+    // 0: not anonymous, 1: anonymous
+    private Integer isAnonymous;
     private String content;
     private LocalDateTime createTime;
 }

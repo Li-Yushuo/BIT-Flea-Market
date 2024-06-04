@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Follow {
-    private int followerId;
-    private int followedId;
+    private Integer followerId;
+    private Integer followedId;
     private LocalDateTime followTime;
 }

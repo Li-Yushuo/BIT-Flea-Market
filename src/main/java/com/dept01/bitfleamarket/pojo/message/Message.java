@@ -10,11 +10,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
-    private int messageId;
-    private int fromId;
-    private int toId;
-    private boolean isAnonymous;
+    private Integer messageId;
+    private Integer fromId;
+    private Integer toId;
+    // 0: not anonymous, 1: anonymous
+    private Integer isAnonymous;
     private String content;
-    private boolean isRead;
+    // 0: not read, 1: read
+    private Integer isRead;
     private LocalDateTime createTime;
 }

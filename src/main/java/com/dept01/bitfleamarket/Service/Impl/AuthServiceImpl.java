@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -28,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthInfoReturn login(String BitId, String password) {
         // 查询用户是否存在，如果不存在返回null，登陆失败
         User user = userMapper.selectByBitId(BitId);
+        // 如果不存在该BitId对应的用户
         if (user == null) {
             return null;
         }
@@ -55,6 +57,15 @@ public class AuthServiceImpl implements AuthService {
 //        if (userMapper.selectByBitId(BitId) == null) {
 //            return null;
 //        }
+
+        User repetitive_user = userMapper.selectByBitId(BitId);
+        // 若该BitId已被注册，抛出错误
+        if (repetitive_user != null) {
+            // 抛出错误，该BitId已被注册
+            // 请实现
+
+        }
+
         // 验证码验证
         if (!verify(code)) {
             return null;
@@ -88,8 +99,12 @@ public class AuthServiceImpl implements AuthService {
     //发送邮箱验证码
     public void sendVerificationCode(String BitId) {
         // 查询邮箱是否已经注册
-        if (userMapper.selectByBitId(BitId) != null) {
-            return;
+        User repetitive_user = userMapper.selectByBitId(BitId);
+        // 若该邮箱已被注册，抛出错误
+        if (repetitive_user != null) {
+            // 抛出错误，该邮箱已被注册
+            // 请实现
+
         }
         //创建对应学号的用户
         User user = new User();

@@ -24,7 +24,7 @@ public class GetProductByIdReturn {
     private String userId;
     private String avatarUrl;
     private String userName;
-    private int inventory;
+    private Integer inventory;
     private String description;
     private String createdTime;
     private String updatedTime;

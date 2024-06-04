@@ -11,16 +11,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-    private int productId;
+    private Integer productId;
     private String name;
     private BigDecimal price;
     private String purchaseMethod; // 在数据库中为enum类型
     private String productCategory; // 在数据库中为enum类型
-    private int publisherId;
+    private Integer publisherId;
     private String status; // 在数据库中为enum类型
-    private int inventory;
+    private Integer inventory;
     private String description;
-    private boolean isAnonymous;
+    // 2024-6-4 更改为Integer类型，0表示不匿名，1表示匿名
+    private Integer isAnonymous;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+
+    public void setAnonymous(Integer isAnonymous) {
+        isAnonymous = 1;
+    }
 }
