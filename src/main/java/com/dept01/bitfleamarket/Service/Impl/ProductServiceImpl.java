@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
             return null;
         int publisherId = product.getPublisherId();
         User user = userMapper.selectByUserId(publisherId);
-        List<ProductImage> productImageList = productImageMapper.getProductImagesByProductId(product.getProductId());
+        List<ProductImage> productImageList = productImageMapper.selectByProductId(product.getProductId());
         return GetProductByIdReturn.from(product, user, productImageList);
     }
 
@@ -94,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
             productImage.setProductId(productId);
             productImage.setImageUrl(imageRequest.getImageUrl());
             productImage.setCreateTime(now);
-            productImageMapper.insertProductImage(productImage);
+            productImageMapper.insert(productImage);
         }
 
         return Result.success(productId);
@@ -123,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
         productImage.setImageUrl(fileName); // 假设保存相对路径
         productImage.setCreateTime(LocalDateTime.now());
 
-        productImageMapper.insertProductImage(productImage);
+        productImageMapper.insert(productImage);
 
         return Result.success(fileName);
     }
@@ -210,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Result getUserProducts(int userId, int lastProductId, int num) {
-        List<Product> products = productMapper.ShowProductsByNum(userId, lastProductId, num);
+        List<Product> products = productMapper.showProductsByNum(userId, lastProductId, num);
         int totalNum = productMapper.countByPublisherId(userId);
 
         return Result.success(new UserProductsResponse(products.size(), totalNum, products));

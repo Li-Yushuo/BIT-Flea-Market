@@ -15,26 +15,26 @@ public class Result {
      * 2 -> 未登录错误
      * 3 -> 无权限错误
      * */
-    private Short code;
+    private int code;
     // 响应信息
     private String msg;
     // 响应数据
     private Object data;
 
     public static Result success() {
-        return new Result((short) 0, "成功", null);
+        return new Result( 0, "成功", null);
     }
 
     public static Result success(Object data) {
-        return new Result((short) 0, "成功", data);
+        return new Result( 0, "成功", data);
     }
 
     public static Result error(String msg) {
-        return new Result((short) 1, msg, null);
+        return new Result( 1, msg, null);
     }
-    public static Result error(Short code, String msg) {return new Result(code, msg, null);}
+    public static Result error(int code, String msg) {return new Result(code, msg, null);}
 
-    public static Result error(Short code, String msg, Object data) {return new Result(code, msg, data);}
+    public static Result error(int code, String msg, Object data) {return new Result(code, msg, data);}
 
     @Override
     public String toString() {

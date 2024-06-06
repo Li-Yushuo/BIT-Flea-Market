@@ -1,5 +1,6 @@
 package com.dept01.bitfleamarket.mapper.user;
 
+import com.dept01.bitfleamarket.pojo.product.Product;
 import com.dept01.bitfleamarket.pojo.user.User;
 import org.apache.ibatis.annotations.*;
 
@@ -34,6 +35,9 @@ public interface UserMapper {
     // 应用示例：List<User> users = userMapper.SelectByCondition(43, "2", null, null, null, null, null, null, null);
     // 可以参照Test中的UserMapperTest
 
+    // 分页查询
+    @Select("SELECT * FROM user WHERE user_id = #{userId} AND user_id > #{lastUserId} ORDER BY update_time DESC LIMIT #{num}")
+    List<Product> showUsersByNum(@Param("userId") int userId, @Param("lastUserId") int lastUserId, @Param("num") int num);
 
     // 更新user，只有传入的非null属性才会被更新
     int update(User user);

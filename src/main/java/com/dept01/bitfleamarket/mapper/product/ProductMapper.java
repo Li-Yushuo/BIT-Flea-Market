@@ -34,6 +34,10 @@ public interface ProductMapper {
     // 应用示例：List<User> products = ProductMapper.selectByCondition("null", "pen", null, null, null, null, null, null, null, null, null, null, null, null)
     // 可以参照Test中的UserMapperTest
 
+    // 分页查询
+    @Select("SELECT * FROM product WHERE publisher_id = #{userId} AND product_id > #{lastProductId} ORDER BY update_time DESC LIMIT #{num}")
+    List<Product> showProductsByNum(@Param("userId") int userId, @Param("lastProductId") int lastProductId, @Param("num") int num);
+
     // 更新product，只有传入的非null属性才会被更新
     int update(Product product);
 
@@ -43,27 +47,5 @@ public interface ProductMapper {
 
     @Select("SELECT COUNT(*) FROM product WHERE publisher_id = #{publisherId}")
     int countByPublisherId(Integer publisherId);
-
-    @Select({
-            "SET @rownum := 0;",
-            "SET @last_rank := 0;",
-            "SELECT @last_rank := rank",
-            "FROM (",
-            "    SELECT *, @rownum := @rownum + 1 AS rank",
-            "    FROM product",
-            "    WHERE publisher_id = #{userId}",
-            "    ORDER BY update_time DESC, product_id DESC",
-            ") t",
-            "WHERE product_id = #{lastProductId};",
-            "SELECT *",
-            "FROM (",
-            "    SELECT *, @rownum := @rownum + 1 AS rank",
-            "    FROM product",
-            "    WHERE publisher_id = #{userId}",
-            "    ORDER BY update_time DESC, product_id DESC",
-            ") t",
-            "WHERE rank > @last_rank",
-            "LIMIT #{num}"
-    })
-    List<Product> ShowProductsByNum(@Param("userId") Integer userId, @Param("lastProductId") Integer lastProductId, @Param("num") Integer num);
 }
+

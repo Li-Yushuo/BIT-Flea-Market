@@ -1,5 +1,6 @@
 package com.dept01.bitfleamarket.service.Impl;
 
+import com.dept01.bitfleamarket.pojo.user.UserBriefInfo;
 import com.dept01.bitfleamarket.service.UserService;
 import com.dept01.bitfleamarket.mapper.user.UserMapper;
 import com.dept01.bitfleamarket.pojo.user.User;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.dept01.bitfleamarket.pojo.user.UserBriefInfo.trimUserInfo;
+
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,21 +25,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OBSUploadUtils obsUploadUtils;
 
+    //查询用户信息
     @Override
-    public User getUserInfo(String userId) {
-        return userMapper.selectByUserId(Integer.parseInt(userId));
+    public UserBriefInfo getUserInfo(String userId) {
+        return trimUserInfo(new UserBriefInfo(userMapper.selectByUserId(Integer.parseInt(userId))));
     }
 
+    //修改用户信息
     @Override
-    public void modifyUserInfo(String userId, User user) {
+    public void modifyUserInfo(String userId, UserBriefInfo user_in) {
+        User user = new User(user_in);
         user.setUserId(Integer.parseInt(userId));
         userMapper.update(user);
     }
 
+    //上传头像
     @Override
     public String uploadAvatar(String userId, MultipartFile avatar) {
-        // 这里需要实现将MultipartFile保存为图片的逻辑，并将图片的URL保存到用户信息中
-        // 假设你已经有了一个将MultipartFile转换为URL的方法，名为convertAndSaveImage
         String imageUrl = convertAndSaveImage(avatar);//上传文件工具类实现，此处调用
         User user = userMapper.selectByUserId(Integer.parseInt(userId));
         user.setAvatarUrl(imageUrl);
@@ -44,9 +49,9 @@ public class UserServiceImpl implements UserService {
         return imageUrl;
     }
 
+    //上传文件的实现
     private String convertAndSaveImage(MultipartFile image)  {
-        // 这里实现将MultipartFile转换为URL的逻辑
-        // 返回图片的URL
+
         log.info("文件上传, 文件名: {}", image.getOriginalFilename());
         try{
         Map<String, Object> returnMap = obsUploadUtils.uploadAvatar(image);
