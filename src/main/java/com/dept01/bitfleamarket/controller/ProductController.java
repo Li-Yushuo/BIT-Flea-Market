@@ -4,8 +4,10 @@ import com.dept01.bitfleamarket.json.*;
 import com.dept01.bitfleamarket.service.ProductService;
 import com.dept01.bitfleamarket.pojo.product.Product;
 import com.dept01.bitfleamarket.service.ProductService;
+import com.dept01.bitfleamarket.utils.JwtUtils;
 import com.dept01.bitfleamarket.utils.OBSUploadUtils;
 import com.dept01.bitfleamarket.utils.Result;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,7 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-    @Autowired
-    private OBSUploadUtils obsUploadUtils;
+
     //获取商品列表
     @GetMapping("/products")
     public Result getProducts(
@@ -50,7 +51,11 @@ public class ProductController {
     @PostMapping("/products")
     public Result createProduct(@RequestBody CreateProductRequest request, HttpServletRequest httpRequest) {
         // 获取用户 ID（假设用户 ID 存储在请求头中）
-        String userIdStr = httpRequest.getHeader("userId");
+        String jwt = httpRequest.getHeader("Authorization");
+        jwt = jwt.split(" ")[1];
+        Claims jwt_claims = JwtUtils.parseJWT(jwt);
+        String  userIdStr = jwt_claims.get("UserId", Integer.class).toString();
+
         if (userIdStr == null || userIdStr.isEmpty()) {
             return Result.error((short) 131, "Unauthorized", null);
         }
@@ -64,11 +69,10 @@ public class ProductController {
         return productService.createProduct(request, userId);
     }
 
-    @PostMapping("/product/{product_id}/uploadPic")
-    public Result uploadProductImage(@PathVariable("product_id") int productId,
-                                     @RequestParam("img") MultipartFile img) throws IOException  {
-        Map<String, Object> returnMap = obsUploadUtils.uploadProductImage(img);
-        return productService.uploadProductImage(productId, img);
+    @PostMapping("/product/uploadPic")
+    public Result uploadProductImage(@RequestParam("img") MultipartFile img) throws IOException  {
+
+        return productService.uploadProductImage(img);
     }
 
 
@@ -82,7 +86,12 @@ public class ProductController {
                                 @RequestBody UpdateProductRequest request,
                                 HttpServletRequest httpRequest) {
         // 检查请求头中的 Authorization
-        String userIdStr = httpRequest.getHeader("user_id");
+        // 获取用户 ID（假设用户 ID 存储在请求头中）
+        String jwt = httpRequest.getHeader("Authorization");
+        jwt = jwt.split(" ")[1];
+        Claims jwt_claims = JwtUtils.parseJWT(jwt);
+        String  userIdStr = jwt_claims.get("UserId", Integer.class).toString();
+
         if (userIdStr == null || userIdStr.isEmpty()) {
             return Result.error((short) 6, "Unauthorized", null);
         }
@@ -101,7 +110,12 @@ public class ProductController {
 
                                       HttpServletRequest httpRequest) {
         // 检查请求头中的 Authorization
-        String userIdStr = httpRequest.getHeader("Authorization");
+        // 获取用户 ID（假设用户 ID 存储在请求头中）
+        String jwt = httpRequest.getHeader("Authorization");
+        jwt = jwt.split(" ")[1];
+        Claims jwt_claims = JwtUtils.parseJWT(jwt);
+        String  userIdStr = jwt_claims.get("UserId", Integer.class).toString();
+
         if (userIdStr == null || userIdStr.isEmpty()) {
             return Result.error((short) 6, "Unauthorized", null);
         }

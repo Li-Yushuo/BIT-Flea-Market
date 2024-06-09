@@ -8,13 +8,14 @@ import com.dept01.bitfleamarket.pojo.product.Product;
 import com.dept01.bitfleamarket.utils.Result;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
-    Result getProducts(int offset, int num, String search_input, String product_categroy, int price_choice);
+    Result getProducts(int offset, int num, String search_input, String product_category, int price_choice);
     GetProductByIdReturn getProductById(String product_id);
     Result createProduct(CreateProductRequest request, int userId);
-    Result uploadProductImage(int productId, MultipartFile img);
+    Result uploadProductImage(MultipartFile img) throws IOException;
     Result updateProduct(int productId, UpdateProductRequest request, int userId);
     Result updateProductStatus(int productId, String status, int userId);
     Result getUserProducts(int userId, int lastProductId, int num);

@@ -8,6 +8,7 @@ import com.dept01.bitfleamarket.mapper.user.UserMapper;
 import com.dept01.bitfleamarket.pojo.product.Product;
 import com.dept01.bitfleamarket.pojo.product.ProductImage;
 import com.dept01.bitfleamarket.pojo.user.User;
+import com.dept01.bitfleamarket.utils.OBSUploadUtils;
 import com.dept01.bitfleamarket.utils.Result;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,10 +34,12 @@ public class ProductServiceImpl implements ProductService {
     ProductImageMapper productImageMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    private OBSUploadUtils obsUploadUtils;
 
     @Override
-    public Result getProducts(int offset, int num, String search_input, String product_categroy, int price_choice) {
-        List<Product> allProducts = productMapper.selectAll();
+    public Result getProducts(int offset, int num, String search_input, String product_category, int price_choice) {
+        List<Product> allProducts = productMapper.selectByConditions(search_input, product_category, price_choice);
         // 异常情况
         if (allProducts == null || allProducts.isEmpty() || offset < 0 || offset >= allProducts.size() || num <= 0) {
 //            List<Product> tmp = new ArrayList<>();
@@ -78,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Result createProduct(CreateProductRequest request, int userId) {
-        LocalDateTime now = LocalDateTime.now();
+        // LocalDateTime now = LocalDateTime.now();
 
         // 创建 Product 对象
         Product product = new Product();
@@ -91,8 +94,8 @@ public class ProductServiceImpl implements ProductService {
         product.setInventory(request.getInventory());
         product.setDescription(request.getDescription());
         product.setIsAnonymous(request.getIs_anonymous());
-        product.setCreateTime(now);
-        product.setUpdateTime(now);
+        // product.setCreateTime(now);
+        // product.setUpdateTime(now);
 
         // 插入 Product 对象到数据库
         int rows = productMapper.insertProduct(product);
@@ -108,37 +111,21 @@ public class ProductServiceImpl implements ProductService {
             ProductImage productImage = new ProductImage();
             productImage.setProductId(productId);
             productImage.setImageUrl(imageRequest.getImage_url());
-            productImage.setCreateTime(now);
-            productImageMapper.insertProductImage(productImage);
+            // productImage.setCreateTime(now);
+            productImageMapper.insert(productImage);
         }
 
         return Result.success(productId);
     }
     @Override
-    public Result uploadProductImage(int productId, MultipartFile img) {
+    public Result uploadProductImage(MultipartFile img) throws IOException{
         if (img.isEmpty()) {
             return Result.error("Uploaded file is empty");
         }
 
         // 生成唯一的文件名
-        String fileName = UUID.randomUUID().toString() + "_" + img.getOriginalFilename();
-
-        // 保存文件到指定目录（假设这里是项目的某个目录）
-        String uploadDir = "uploads/";
-        File file = new File(uploadDir + fileName);
-        try {
-            img.transferTo(file);
-        } catch (IOException e) {
-            return Result.error("Failed to save uploaded file");
-        }
-
-        // 保存文件信息到数据库
-        ProductImage productImage = new ProductImage();
-        productImage.setProductId(productId);
-        productImage.setImageUrl(fileName); // 假设保存相对路径
-        productImage.setCreateTime(LocalDateTime.now());
-
-        productImageMapper.insertProductImage(productImage);
+        Map<String, Object> returnMap = obsUploadUtils.uploadProductImage(img);
+        String fileName = returnMap.get("url").toString();
 
         return Result.success(fileName);
     }
@@ -183,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setAnonymous(request.getIsAnonymous());
         }
 
-        existingProduct.setUpdateTime(LocalDateTime.now());
+        // existingProduct.setUpdateTime(LocalDateTime.now());
 
         int rows = productMapper.update(existingProduct);
         if (rows <= 0) {
@@ -213,7 +200,7 @@ public class ProductServiceImpl implements ProductService {
 
         // 更新产品状态
         existingProduct.setStatus(status);
-        existingProduct.setUpdateTime(LocalDateTime.now());
+        // existingProduct.setUpdateTime(LocalDateTime.now());
 
         int rows = productMapper.update(existingProduct);
         if (rows <= 0) {
@@ -226,9 +213,24 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Result getUserProducts(int userId, int lastProductId, int num) {
         List<Product> products = productMapper.showProductsByNum(userId, lastProductId, num);
-        int totalNum = productMapper.countByPublisherId(userId);
 
-        return Result.success(new UserProductsResponse(products.size(), totalNum, products));
+        List<ProductResponse> productResponses = products.stream().map(product -> {
+            List<ProductImage> images = productImageMapper.selectByProductId(product.getProductId());
+            String coverImageUrl = images.isEmpty() ? "null" : images.get(0).getImageUrl();
+
+            return new ProductResponse(
+                    product.getName(),
+                    product.getPrice(),
+                    product.getPurchaseMethod(),
+                    coverImageUrl,
+                    product.getProductCategory(),
+                    product.getCreateTime(),
+                    product.getUpdateTime(),
+                    product.getStatus()
+            );
+        }).collect(Collectors.toList());
+
+        return Result.success(new UserProductsResponse(productResponses.size(), products.size(), productResponses));
     }
 
 }

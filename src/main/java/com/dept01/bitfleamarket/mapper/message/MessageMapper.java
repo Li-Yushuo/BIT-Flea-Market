@@ -28,17 +28,36 @@ public interface MessageMapper {
     // 根据fromId查询to_id用户列表
 //    @Select("SELECT * FROM user WHERE user_id in (SELECT DISTINCT to_id FROM message WHERE from_id = #{fromId} ORDER BY create_time) LIMIT #{num}")
 //    List<User> showUsersByNum(int fromId, int last_user_id, int num);
-    @Select("SELECT user.* " +
-            "FROM user " +
-            "JOIN message ON user.user_id = message.from_id " +
-            "WHERE user.user_id = #{fromId} AND user.user_id > #{lastUserId} " +
-            "GROUP BY user.user_id " +
-            "ORDER BY MAX(message.create_time) DESC " +
-            "LIMIT #{num}")
+//    @Select("SELECT user.* " +
+//            "FROM user " +
+//            "JOIN message ON user.user_id = message.from_id " +
+//            "WHERE user.user_id = #{fromId} AND user.user_id > #{lastUserId} " +
+//            "GROUP BY user.user_id " +
+//            "ORDER BY MAX(message.create_time) DESC " +
+//            "LIMIT #{num}")
+//    List<User> showUsersByNum(@Param("fromId") int fromId, @Param("lastUserId") int lastUserId, @Param("num") int num);
+
+//    @Select("SELECT user.* " +
+//            "FROM user " +
+//            "JOIN message ON (user.user_id = message.from_id) " +
+//            "WHERE (user.user_id = #{fromId}) AND user.user_id > #{lastUserId} " +
+//            "GROUP BY user.user_id " +
+//            "ORDER BY MAX(message.create_time) DESC " +
+//            "LIMIT #{num}")
+//    @Select("SELECT user.* " +
+//            "FROM user " +
+//            "JOIN message ON (user.user_id = message.from_id) " +
+//            "WHERE (user.user_id = #{fromId}) AND user.user_id > #{lastUserId} " +
+//            "GROUP BY user.user_id " +
+//            "ORDER BY MAX(message.create_time) DESC " +
+//            "LIMIT #{num}")
+    @Select("SELECT * FROM user WHERE user_id in (SELECT to_id from message WHERE from_id = #{fromId} " +
+            "UNION " +
+            "SELECT from_id from message WHERE to_id = #{fromId})")
     List<User> showUsersByNum(@Param("fromId") int fromId, @Param("lastUserId") int lastUserId, @Param("num") int num);
 
     //根据fromId和toId查询消息列表
-    @Select("SELECT * FROM message WHERE from_id = #{fromId} AND to_id = #{toId} ORDER BY create_time DESC")
+    @Select("SELECT * FROM message WHERE (from_id = #{fromId} AND to_id = #{toId}) OR (from_id = #{toId} AND to_id = #{fromId}) ORDER BY create_time DESC")
     List<Message> selectUsersMsg(int fromId, int toId);
 
     // 分页查询消息

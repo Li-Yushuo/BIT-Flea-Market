@@ -36,7 +36,7 @@ public class UserBriefInfo {
     }
 
     public static UserBriefInfo trimUserListInfo(UserBriefInfo userBriefInfo) {
-        userBriefInfo.setName(null);
+        userBriefInfo.setBit_id(null);
         userBriefInfo.setGender(null);
         userBriefInfo.setContact_info(null);
         userBriefInfo.setPersonal_signature(null);

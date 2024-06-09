@@ -24,6 +24,8 @@ public interface ProductMapper {
     @Select("SELECT * FROM product WHERE product_id = #{productId} ORDER BY update_time DESC")
     Product selectByProductId(Integer productId);
 
+
+
     // 依据publisherId查找商品
     @Select("SELECT * FROM product WHERE publisher_id = #{publisherId} ORDER BY update_time DESC")
     List<Product> selectByPublisherId(Integer publisherId);
@@ -46,6 +48,22 @@ public interface ProductMapper {
     int deleteProduct(Integer productId);
 
     @Select("SELECT COUNT(*) FROM product WHERE publisher_id = #{publisherId}")
-    int countByPublisherId(Integer publisherId);
+    int countByPublisherId(Integer publisherId);    // 根据条件查询产品
+
+//    @Select({
+//            "SELECT * FROM product "+
+//            "WHERE (name LIKE CONCAT('%', #{searchInput}, '%') OR #{searchInput} IS NULL OR #{searchInput} = '')"+
+//            "AND (product_category = #{productCategory} OR #{productCategory} IS NULL OR #{productCategory} = '全部')"+
+//            "AND ("+
+//            "#{priceChoice} = 0 "+
+//            "OR (#{priceChoice} = 1 AND price < 10)"+
+//            "OR (#{priceChoice} = 2 AND price BETWEEN 10 AND 30)"+
+//            "OR (#{priceChoice} = 3 AND price > 30)"+
+//            "       )"+
+//            "ORDER BY update_time DESC"
+//    })
+    List<Product> selectByConditions(@Param("searchInput") String searchInput,
+                                     @Param("productCategory") String productCategory,
+                                     @Param("priceChoice") int priceChoice);
 }
 

@@ -2,6 +2,7 @@ package com.dept01.bitfleamarket.mapper;
 
 import com.dept01.bitfleamarket.mapper.product.ProductMapper;
 import com.dept01.bitfleamarket.pojo.product.Product;
+import org.apache.ibatis.annotations.Param;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +14,17 @@ public class ProductMapperTest {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Test
+    void selectByConditionsTest() {
+        String search_input = "";
+        String productCategory = "学习办公";
+        Integer priceChoice = 0;
+        List<Product> products = productMapper.selectByConditions(search_input, productCategory, priceChoice);
+        for (Product product : products) {
+            System.out.println("ProductId: " + product.getProductId() + ", Name: " + product.getName() + ", Price: " + product.getPrice() + ", Purchase Method: " + product.getPurchaseMethod() + ", Product Category: " + product.getProductCategory() + ", Publisher Id: " + product.getPublisherId() + ", Status: " + product.getStatus() + ", Inventory: " + product.getInventory() + ", Description: " + product.getDescription() + ", Is Anonymous: " + product.getIsAnonymous() + ", Create Time: " + product.getCreateTime() + ", Update Time: " + product.getUpdateTime());
+        }
+    }
 
     @Test
     void showProductsByNumTest() {

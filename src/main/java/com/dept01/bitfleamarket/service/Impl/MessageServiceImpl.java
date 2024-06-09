@@ -31,8 +31,8 @@ public class MessageServiceImpl implements MessageService{
         return messageMapper.setRead(messageId) == 1;
     }
 
-    public UserListReturn getUserListReturn(int fromId,int last_user_id, int num) {
-        List<User> userList= messageMapper.showUsersByNum(fromId, last_user_id, num);
+    public UserListReturn getUserListReturn(int fromId) {
+        List<User> userList= messageMapper.showUsersByNum(fromId,0,10000);
         List<UserBriefInfo> userBriefList = new java.util.ArrayList<>(List.of());
         for (User user : userList) {
             UserBriefInfo temp = new UserBriefInfo(user);

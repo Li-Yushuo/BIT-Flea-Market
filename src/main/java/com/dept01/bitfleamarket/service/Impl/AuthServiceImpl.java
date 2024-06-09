@@ -2,11 +2,10 @@ package com.dept01.bitfleamarket.service.Impl;
 
 import com.dept01.bitfleamarket.json.AuthInfoReturn;
 import com.dept01.bitfleamarket.mapper.user.UserMapper;
+import com.dept01.bitfleamarket.mapper.user.VerificationCodeMapper;
 import com.dept01.bitfleamarket.pojo.user.User;
 import com.dept01.bitfleamarket.service.AuthService;
-import com.dept01.bitfleamarket.service.EmailService;
 import com.dept01.bitfleamarket.utils.JwtUtils;
-import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private UserMapper userMapper;
 
     @Autowired
-    private EmailService emailService;
+    private VerificationCodeMapper verifyMapper;
 
     //登录服务，如果登录成功，返回用户信息，如果登录失败，返回失败信息
     @Override
@@ -165,46 +164,14 @@ public class AuthServiceImpl implements AuthService {
         return authInfoReturn;
     }
 
-    //发送邮箱验证码
-    public void sendVerificationCode(String BitId) {
-        // 查询邮箱是否已经注册
-        User repetitive_user = userMapper.selectByBitId(BitId);
-        // 若该邮箱已被注册，抛出错误
-        if (repetitive_user != null) {
-            // 抛出错误，该邮箱已被注册
-            // 请实现
-
-        }
-        //创建对应学号的用户
-        User user = new User();
-        user.setBitId(BitId);
-        userMapper.insert(user);
-
-//        User user = userMapper.selectByBitId(BitId);
-//        if (user == null) {
-//            throw new RuntimeException("邮箱未注册");
-//        }
-//        // 生成验证码，存入数据库用于验证
-//        String code = String.valueOf(new Random().nextInt(900000) + 100000);
-//        user.setVerificationCode(code);
-//        userMapper.save(user);
-//        try {
-//            emailService.sendEmail(BitId+"@bit.edu.cn","BIT-Flea-Market Verification Code", code);
-//        } catch (MessagingException e) {
-//            throw new RuntimeException("邮件发送失败");
-//        }
-    }
 
     //验证服务（邮箱验证）
     public boolean verify(String BitId,String code) {
-//        User user = userMapper.findByVerificationCode(code);
-//        if (user == null || user.isEnabled()) {
-//            throw new RuntimeException("无效的验证请求");
-//        }
-//        emailService.setVerificationCode(null);
-//        user.setEnabled(true);
-//        userMapper.save(user);
-        return true;
-
+        //查找验证码表有没有相关bitid的记录并选择最新的验证码
+        String verificationCode = verifyMapper.selectByBitId(BitId);
+        if (verificationCode == null) {
+            return false;
+        }
+        return verificationCode.equals(code);
     }
 }

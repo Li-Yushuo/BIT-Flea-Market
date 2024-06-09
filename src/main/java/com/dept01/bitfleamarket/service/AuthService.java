@@ -6,6 +6,5 @@ public interface AuthService {
     AuthInfoReturn login(String BitId, String password);
     AuthInfoReturn register(String BitId, String password, String code);
     AuthInfoReturn modifyPassword(String BitId, String password, String code);
-    void sendVerificationCode(String BitId);
     boolean verify(String BitId, String code);
 }

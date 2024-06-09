@@ -316,6 +316,22 @@ ALTER TABLE product_label
 ALTER TABLE product_label
     ADD COLUMN create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
+CREATE TABLE verification_code (
+                                   code_id INTEGER NOT NULL AUTO_INCREMENT,
+                                   bit_id CHAR(10) NOT NULL,
+                                   verification_code VARCHAR(6) NOT NULL,
+                                   PRIMARY KEY (code_id)
+);
 
+ALTER TABLE verification_code
+    ADD COLUMN create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
+ALTER TABLE verification_code
+    CHANGE COLUMN verification_code code VARCHAR(6) NOT NULL;
 
+CREATE TRIGGER verification_code_insert
+    BEFORE INSERT ON verification_code
+    FOR EACH ROW
+BEGIN
+    SET NEW.create_time = NOW();
+END;

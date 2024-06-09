@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class MessageMapperTest {
 
-    @Autowired
-    private MessageMapper messageMapper;
-
+//    @Autowired
+//    private MessageMapper messageMapper;
+//
 //    @Test
 //    void insertTest() {
 //        Message message = new Message();
@@ -52,10 +52,8 @@ public class MessageMapperTest {
 //
 //    @Test
 //    void selectUserListTest() {
-//        int fromId = 23; // replace with actual from id
-//        int lastUserId = 1; // replace with actual last user id
-//        int num = 2; // replace with actual number of users to fetch
-//        List<User> to_users = messageMapper.showUsersByNum(fromId, lastUserId, num);
+//        int fromId = 25; // replace with actual from id
+//        List<User> to_users = messageMapper.showUsersByNum(fromId, 0, 1000);
 //        for (User to_user : to_users) {
 //            System.out.println("toUserId: " + to_user.getUserId());
 //        }

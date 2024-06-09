@@ -31,6 +31,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        //如果请求是get请求并且url中包含products，放行
+        if("GET".equalsIgnoreCase(req.getMethod()) && url.contains("products")){
+            log.info("GET请求, 放行...");
+            return true;
+        }
+
         //3.获取请求头中的令牌（token）。
         String jwt = req.getHeader("Authorization");
         jwt = jwt.split(" ")[1];

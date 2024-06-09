@@ -6,7 +6,7 @@ import com.dept01.bitfleamarket.pojo.message.Message;
 
 public interface MessageService {
     boolean readMsg(int messageId);
-    UserListReturn getUserListReturn(int fromId,int last_user_id, int num);
+    UserListReturn getUserListReturn(int fromId);
     MsgListReturn getMsgListReturn(int fromId, String userId);
     boolean saveMsg(Message msg);
 }

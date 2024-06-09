@@ -77,4 +77,28 @@
         WHERE product_id = #{productId}
     </update>
 
+    <select id="selectByConditions" resultType="com.dept01.bitfleamarket.pojo.product.Product">
+        SELECT * FROM product
+        <where>
+            <if test="searchInput != null and searchInput != ''">
+                AND name LIKE CONCAT('%', #{searchInput}, '%')
+            </if>
+            <if test="productCategory != null and productCategory != '' and productCategory != '全部'">
+                AND product_category = #{productCategory}
+            </if>
+            <choose>
+                <when test="priceChoice == 1">
+                    AND price &lt; 10
+                </when>
+                <when test="priceChoice == 2">
+                    AND price BETWEEN 10 AND 30
+                </when>
+                <when test="priceChoice == 3">
+                    AND price &gt; 30
+                </when>
+            </choose>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
 </mapper>

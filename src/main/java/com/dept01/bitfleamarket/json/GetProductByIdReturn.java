@@ -22,9 +22,9 @@ public class GetProductByIdReturn {
     private String purchase_method;
     private String product_categroy;
     private Publisher publisher;
-    private String userId;
-    private String avatarUrl;
-    private String userName;
+//    private int userId;
+//    private String avatarUrl;
+//    private String userName;
     private int inventroy;
     private String description;
     private String created_time;
@@ -36,7 +36,7 @@ public class GetProductByIdReturn {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Publisher {
-        private String user_id;
+        private int user_id;
         private String name;
         private String avatar_url;
     }
@@ -49,7 +49,12 @@ public class GetProductByIdReturn {
     }
 
     public static GetProductByIdReturn from(Product product, User user, List<ProductImage> productImageList) {
-        Publisher publisher = new Publisher(user.getBitId(), user.getName(), user.getAvatarUrl());
+
+        Publisher publisher = null;
+        if (product.getIsAnonymous() == 1)
+            publisher = new Publisher(-1, "匿名用户", "https://flea-market-obs.obs.ap-southeast-1.myhuaweicloud.com/avatar/anonymous_avatar.jpeg");
+        else
+            publisher = new Publisher(user.getUserId(), user.getName(), user.getAvatarUrl());
 
         List<Image> images = productImageList.stream()
                 .map(image -> new Image(image.getImageUrl()))
@@ -61,9 +66,9 @@ public class GetProductByIdReturn {
                 product.getPurchaseMethod(),
                 product.getProductCategory(),
                 publisher,
-                user.getBitId(),
-                user.getAvatarUrl(),
-                user.getName(),
+//                user.getUserId(),
+//                user.getAvatarUrl(),
+//                user.getName(),
                 product.getInventory(),
                 product.getDescription(),
                 product.getCreateTime().toString(),

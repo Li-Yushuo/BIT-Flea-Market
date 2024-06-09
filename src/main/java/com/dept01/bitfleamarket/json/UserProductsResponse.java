@@ -12,5 +12,5 @@ import java.util.List;
 public class UserProductsResponse {
         private int num;
         private int totalNum;
-        private List<Product> products;
+        private List<ProductResponse> products;
 }
