@@ -36,6 +36,10 @@ public class Result {
 
     public static Result error(int code, String msg, Object data) {return new Result(code, msg, data);}
 
+    public static Result error(short code, String msg) {
+        return new Result(code, msg, null);
+    }
+
     @Override
     public String toString() {
         return "Result{" +

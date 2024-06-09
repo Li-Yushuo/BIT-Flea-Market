@@ -5,3 +5,17 @@ hwy: # 华为云OBS配置信息
     bucket: flea-market-obs
     access-key: jLe94pgmng3uynEJeZlnCseQBdkJEe4outCUme0J
     access-id: PKVSY6FN8DCQZQQMNSNT
+
+spring:
+  mail:
+    #邮箱域名、端口、邮箱账号、登录授权密码、启用smtps安全协议、采用ssl安全链接
+    host: smtp.qq.com
+    port: 465
+    username: 2253457010@qq.com
+    password: unjdjosuvehdeahi
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.ssl.enable: true
+      mail.smtp.auth: true
+

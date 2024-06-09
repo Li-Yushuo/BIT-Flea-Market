@@ -13,17 +13,19 @@ import java.util.List;
 public class CreateProductRequest {
     private String name;
     private BigDecimal price;
-    private String purchaseMethod;
-    private String productCategory;
-    private Integer inventory;
+    private String purchase_method;
+    private String product_category;
+    private int inventory;
     private String description;
-    private Integer isAnonymous;
+    private boolean is_anonymous;
     private List<ImageRequest> images;
+
+    public int getIs_anonymous() {return is_anonymous ? 1 : 0;}
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ImageRequest {
-        private String imageUrl;
+        private String image_url;
     }
 }

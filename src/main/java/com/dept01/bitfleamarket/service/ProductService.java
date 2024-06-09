@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ProductService {
-    GetProductsReturn getProducts(int offset, int num, String search_input, String product_categroy, int price_choice);
+    Result getProducts(int offset, int num, String search_input, String product_categroy, int price_choice);
     GetProductByIdReturn getProductById(String product_id);
     Result createProduct(CreateProductRequest request, int userId);
     Result uploadProductImage(int productId, MultipartFile img);

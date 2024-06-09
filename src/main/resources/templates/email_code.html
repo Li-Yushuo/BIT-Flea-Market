@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>邮箱验证码</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        max-width: 800px;
+        background: linear-gradient(70deg, rgb(59, 182, 254) -20%, rgb(142, 76, 183) 30%);
+        margin: 0 auto;
+        padding: 40px 15px;
+      }
+
+      .username-line {
+        font-size: 28px;
+        font-weight: bold;
+        color: #ffc23e;
+      }
+
+      .content p {
+        color: #eee;
+        text-indent: 2em;
+        font-size: 20px;
+        margin: 20px 10px;
+        line-height: 1.6;
+      }
+
+      .content p a {
+        text-decoration: none;
+        color: rgba(8, 235, 167, 0.911);
+      }
+
+      .code {
+        /* background-color: aliceblue; */
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 40px 0;
+      }
+
+      .code span {
+        display: inline-block;
+        width: 54px;
+        height: 54px;
+        background-color: rgb(231, 156, 15);
+        font-size: 24px;
+        text-align: center;
+        line-height: 54px;
+        font-weight: bold;
+        border: 2px solid #fe742b;
+        border-radius: 15px;
+        color: white;
+      }
+
+      .from {
+        text-align: end;
+        font-size: 18px;
+        color: gold;
+        margin: 10px;
+      }
+
+      .date {
+        text-align: end;
+        font-size: 18px;
+        color: gold;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="username-line">亲爱的北理同学<span th:text="${bitid}"></span>：</div>
+      <div class="content">
+        <p>
+          感谢您选择我们的<a href="http://119.8.97.65/">BIT跳蚤市场</a
+          >来发布购买商品，我们将竭诚为您提供服务。
+        </p>
+        <p>收到的邮箱验证码如下：</p>
+        <div class="code">
+          <span th:each="char: ${code}" th:text="${char}"></span>
+        </div>
+        <p>请务必确保您的账户信息安全，不要将验证码或账户信息泄露给任何人！</p>
+        <p>如果您在验证过程中遇到任何问题，或者需要进一步的帮助，请随时通过以下方式与我们联系：</p>
+        <p>邮箱：<a href="mailto:2253457010@qq.com">2253457010@qq.com</a></p>
+      </div>
+      <div class="from">软工开发一部</div>
+      <div class="date" th:text="${date}"></div>
+    </div>
+  </body>
+</html>

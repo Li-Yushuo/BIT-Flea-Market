@@ -20,32 +20,47 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductMapper productMapper;
+    @Autowired
     ProductImageMapper productImageMapper;
+    @Autowired
     UserMapper userMapper;
 
     @Override
-    public GetProductsReturn getProducts(int offset, int num, String search_input, String product_categroy, int price_choice) {
+    public Result getProducts(int offset, int num, String search_input, String product_categroy, int price_choice) {
         List<Product> allProducts = productMapper.selectAll();
         // 异常情况
         if (allProducts == null || allProducts.isEmpty() || offset < 0 || offset >= allProducts.size() || num <= 0) {
-            List<Product> tmp = new ArrayList<>();
-            GetProductsReturn getProductsReturn = new GetProductsReturn(0, tmp);
-            return getProductsReturn;
+//            List<Product> tmp = new ArrayList<>();
+//            GetProductsReturn getProductsReturn = new GetProductsReturn(0, tmp);
+//            return getProductsReturn;
+            return Result.error("无满足条件的商品");
         }
         // 正常情况
         else{
             // 计算子列表的结束下标
             int endIndex = Math.min(offset + num, allProducts.size());
             List<Product> tmp = new ArrayList<>(allProducts.subList(offset, endIndex));
-            GetProductsReturn getProductsReturn = new GetProductsReturn(allProducts.size(), tmp);
-            return getProductsReturn;
+            // 获取每个产品的封面图片 URL
+            Map<Integer, String> coverImageUrls = tmp.stream()
+                    .collect(Collectors.toMap(
+                            Product::getProductId,
+                            product -> {
+                                List<ProductImage> images = productImageMapper.selectByProductId(product.getProductId());
+                                return images.isEmpty() ? "{null}" : images.get(0).getImageUrl();
+                            }
+                    ));
+
+            GetProductsReturn getProductsReturn = GetProductsReturn.fromProducts(allProducts.size(), tmp, coverImageUrls);
+            return Result.success(getProductsReturn);
         }
     }
 
@@ -69,13 +84,13 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setName(request.getName());
         product.setPrice(request.getPrice());
-        product.setPurchaseMethod(request.getPurchaseMethod());
-        product.setProductCategory(request.getProductCategory());
+        product.setPurchaseMethod(request.getPurchase_method());
+        product.setProductCategory(request.getProduct_category());
         product.setPublisherId(userId);
-        product.setStatus("ACTIVE"); // 假设新创建的产品状态为 ACTIVE
+        product.setStatus("on-sale"); // 假设新创建的产品状态为 ACTIVE
         product.setInventory(request.getInventory());
         product.setDescription(request.getDescription());
-        product.setAnonymous(request.getIsAnonymous());
+        product.setIsAnonymous(request.getIs_anonymous());
         product.setCreateTime(now);
         product.setUpdateTime(now);
 
@@ -92,9 +107,9 @@ public class ProductServiceImpl implements ProductService {
         for (CreateProductRequest.ImageRequest imageRequest : request.getImages()) {
             ProductImage productImage = new ProductImage();
             productImage.setProductId(productId);
-            productImage.setImageUrl(imageRequest.getImageUrl());
+            productImage.setImageUrl(imageRequest.getImage_url());
             productImage.setCreateTime(now);
-            productImageMapper.insert(productImage);
+            productImageMapper.insertProductImage(productImage);
         }
 
         return Result.success(productId);
@@ -123,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
         productImage.setImageUrl(fileName); // 假设保存相对路径
         productImage.setCreateTime(LocalDateTime.now());
 
-        productImageMapper.insert(productImage);
+        productImageMapper.insertProductImage(productImage);
 
         return Result.success(fileName);
     }

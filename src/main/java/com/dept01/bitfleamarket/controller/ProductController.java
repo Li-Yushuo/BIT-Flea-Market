@@ -27,12 +27,14 @@ public class ProductController {
     //获取商品列表
     @GetMapping("/products")
     public Result getProducts(
-            int offset, int num, String search_input, String product_category, int price_choice) {
-        GetProductsReturn products = productService.getProducts(offset, num, search_input, product_category, price_choice);
-        if (products.getTotal_num() == 0)
-            return Result.error("无符合条件的商品");
-        else
-            return Result.success(products);
+            @RequestParam int offset,
+            @RequestParam int num,
+            @RequestParam(required = false) String search_input,
+            @RequestParam(required = false) String product_category,
+            @RequestParam(required = false) int price_choice
+    ) {
+        Result result = productService.getProducts(offset, num, search_input, product_category, price_choice);
+        return result;
     }
 
     //获取商品详情
@@ -50,16 +52,15 @@ public class ProductController {
         // 获取用户 ID（假设用户 ID 存储在请求头中）
         String userIdStr = httpRequest.getHeader("userId");
         if (userIdStr == null || userIdStr.isEmpty()) {
-            return Result.error((short) 6, "Unauthorized", null);
+            return Result.error((short) 131, "Unauthorized", null);
         }
 
         int userId;
         try {
             userId = Integer.parseInt(userIdStr);
         } catch (NumberFormatException e) {
-            return Result.error((short) 1, "Invalid user ID", null);
+            return Result.error((short) 131, "Invalid user ID", null);
         }
-
         return productService.createProduct(request, userId);
     }
 
@@ -76,7 +77,7 @@ public class ProductController {
 //    public String publishProduct() {
 //        return "publish";
 //    }
-    @PutMapping("/product/{product_id}")
+    @PostMapping ("/products/{product_id}")
     public Result updateProduct(@PathVariable("product_id") int productId,
                                 @RequestBody UpdateProductRequest request,
                                 HttpServletRequest httpRequest) {
@@ -95,9 +96,9 @@ public class ProductController {
 
         return productService.updateProduct(productId, request, userId);
     }
-    @PutMapping("/product/{product_id}/status")
+    @PostMapping("/products/{product_id}/status")
     public Result updateProductStatus(@PathVariable("product_id") int productId,
-                                      @RequestBody String status,
+
                                       HttpServletRequest httpRequest) {
         // 检查请求头中的 Authorization
         String userIdStr = httpRequest.getHeader("Authorization");
@@ -112,12 +113,13 @@ public class ProductController {
             return Result.error((short) 1, "Invalid user ID", null);
         }
 
-        return productService.updateProductStatus(productId, status, userId);
+        return productService.updateProductStatus(productId, "sold-out", userId);
     }
 
-    @GetMapping("/product/{user_id}")
+    @GetMapping("/products/users/{user_id}")
     public Result getUserProducts(@PathVariable("user_id") int userId,
-                                  @RequestBody UserProductsRequest request,
+                                  @RequestParam int last_product_id,
+                                  @RequestParam int num,
                                   HttpServletRequest httpRequest) {
         // 检查请求头中的 Authorization
         String authorization = httpRequest.getHeader("Authorization");
@@ -125,6 +127,6 @@ public class ProductController {
             return Result.error((short) 6, "Unauthorized", null);
         }
 
-        return productService.getUserProducts(userId, request.getLastProductId(), request.getNum());
+        return productService.getUserProducts(userId, last_product_id, num);
     }
 }

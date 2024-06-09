@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,25 +19,26 @@ import java.util.stream.Collectors;
 public class GetProductByIdReturn {
     private String name;
     private String price;
-    private String purchaseMethod;
-    private String productCategory;
+    private String purchase_method;
+    private String product_categroy;
     private Publisher publisher;
     private String userId;
     private String avatarUrl;
     private String userName;
-    private Integer inventory;
+    private int inventroy;
     private String description;
-    private String createdTime;
-    private String updatedTime;
+    private String created_time;
+    private String updated_time;
     private List<Image> images;
+    private List<String> labels;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Publisher {
-        private String userId;
+        private String user_id;
         private String name;
-        private String avatarUrl;
+        private String avatar_url;
     }
 
     @Data
@@ -66,7 +68,8 @@ public class GetProductByIdReturn {
                 product.getDescription(),
                 product.getCreateTime().toString(),
                 product.getUpdateTime().toString(),
-                images
+                images,
+                new ArrayList<>()
         );
     }
 }
