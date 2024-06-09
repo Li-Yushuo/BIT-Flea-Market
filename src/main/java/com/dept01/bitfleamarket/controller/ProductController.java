@@ -4,6 +4,7 @@ import com.dept01.bitfleamarket.json.*;
 import com.dept01.bitfleamarket.service.ProductService;
 import com.dept01.bitfleamarket.pojo.product.Product;
 import com.dept01.bitfleamarket.service.ProductService;
+import com.dept01.bitfleamarket.utils.OBSUploadUtils;
 import com.dept01.bitfleamarket.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -19,6 +22,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private OBSUploadUtils obsUploadUtils;
     //获取商品列表
     @GetMapping("/products")
     public Result getProducts(
@@ -60,9 +65,11 @@ public class ProductController {
 
     @PostMapping("/product/{product_id}/uploadPic")
     public Result uploadProductImage(@PathVariable("product_id") int productId,
-                                     @RequestParam("img") MultipartFile img) {
+                                     @RequestParam("img") MultipartFile img) throws IOException  {
+        Map<String, Object> returnMap = obsUploadUtils.uploadProductImage(img);
         return productService.uploadProductImage(productId, img);
     }
+
 
 //    //发布商品
 //    @PostMapping("/products")
