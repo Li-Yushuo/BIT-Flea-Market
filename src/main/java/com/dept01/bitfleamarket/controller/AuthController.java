@@ -5,6 +5,7 @@ import com.dept01.bitfleamarket.json.LoginRequest;
 import com.dept01.bitfleamarket.json.RegisterRequest;
 import com.dept01.bitfleamarket.json.VerifyRequest;
 import com.dept01.bitfleamarket.service.AuthService;
+import com.dept01.bitfleamarket.service.EmailService;
 import com.dept01.bitfleamarket.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private EmailService emailService;
 
     //登录
     @PostMapping("/users/login")
@@ -50,7 +54,7 @@ public class AuthController {
     //验证(邮箱验证)
     @PostMapping("/verify")
     public Result verify(@RequestBody VerifyRequest verifyRequest) {
-        return Result.success();
+        return emailService.sendVerificationCode(verifyRequest.getBit_id());
     }
 
 }
