@@ -97,6 +97,7 @@
                     AND price &gt; 30
                 </when>
             </choose>
+                AND status ='on-sale'
         </where>
         ORDER BY update_time DESC
     </select>

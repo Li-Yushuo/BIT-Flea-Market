@@ -219,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
             String coverImageUrl = images.isEmpty() ? "null" : images.get(0).getImageUrl();
 
             return new ProductResponse(
-                    product.getProductId().toString(),
+                    product.getProductId(),
                     product.getName(),
                     product.getPrice(),
                     product.getPurchaseMethod(),

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse {
-    private String product_id;
+    private int product_id;
     private String name;
     private BigDecimal price;
     private String purchase_method; // 在数据库中为enum类型
