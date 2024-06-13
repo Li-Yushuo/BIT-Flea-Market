@@ -4,7 +4,7 @@ hwy: # 华为云OBS配置信息
     endpoint: obs.ap-southeast-1.myhuaweicloud.com
     bucket: flea-market-obs
     access-key: jLe94pgmng3uynEJeZlnCseQBdkJEe4outCUme0J
-    access-id: PKVSY6FN8DCQZQQMNSNT
+    access-id:
 
 spring:
   mail:
@@ -12,7 +12,7 @@ spring:
     host: smtp.qq.com
     port: 465
     username: 2253457010@qq.com
-    password: bjlqqvoqfrpreajf
+    password:
     protocol: smtp
     default-encoding: UTF-8
     properties:
